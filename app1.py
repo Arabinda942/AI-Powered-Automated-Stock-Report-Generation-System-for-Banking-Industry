@@ -314,7 +314,6 @@ st.download_button(
     "filtered_stock_data.csv",
     mime="text/csv"
 )
-st.download_button("Download CSV", csv, "filtered_data.csv")
 
 # Candlestick
 for s in selected_stocks:
