@@ -7,13 +7,13 @@ The system integrates multiple ML models such as Logistic Regression, Random For
 
 Built using Streamlit, the application provides an interactive dashboard that supports:
 
-Real-time and uploaded stock data
-Multi-stock analysis (NIFTY-based)
-Automated signal generation (Buy/Sell/Hold)
-Risk classification and trade recommendations (Stop Loss & Target)
-Volume spike detection and trend identification
-Top bullish and bearish stock identification
-Interactive candlestick charts and filtering options
-Downloadable reports for further analysis
+1. Real-time and uploaded stock data
+2. Multi-stock analysis (NIFTY-based)
+3. Automated signal generation (Buy/Sell/Hold)
+4. Risk classification and trade recommendations (Stop Loss & Target)
+5. Volume spike detection and trend identification
+6. Top bullish and bearish stock identification
+7. Interactive candlestick charts and filtering options
+8. Downloadable reports for further analysis
 
 This system aims to reduce manual effort in financial reporting, improve decision accuracy, and bring AI-driven automation into the banking and financial services industry.
