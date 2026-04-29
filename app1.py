@@ -48,6 +48,33 @@ mode = st.sidebar.radio("Select Mode", ["Upload File", "Live Data (NIFTY 50)"])
 uploaded_file = st.sidebar.file_uploader("Upload CSV / Excel", type=None)
 
 # ============================================
+# SAMPLE FILE DOWNLOAD (UPLOAD FORMAT GUIDE)
+# ============================================
+
+st.sidebar.markdown("### 📥 Upload Format Help")
+
+sample_df = pd.DataFrame({
+    "Date": ["2024-01-01", "2024-01-02"],
+    "Ticker": ["RELIANCE.NS", "RELIANCE.NS"],
+    "Open": [2500, 2520],
+    "High": [2550, 2560],
+    "Low": [2480, 2510],
+    "Close": [2530, 2540],
+    "Volume": [1200000, 1350000]
+})
+
+sample_csv = sample_df.to_csv(index=False)
+
+st.sidebar.download_button(
+    label="⬇️ Download Sample CSV Format",
+    data=sample_csv,
+    file_name="sample_stock_format.csv",
+    mime="text/csv"
+)
+
+st.sidebar.caption("Required columns: Date, Ticker, Open, High, Low, Close, Volume")
+
+# ============================================
 # CLEANING FUNCTION (IMPORTANT FIX)
 # ============================================
 def clean_data(df):
