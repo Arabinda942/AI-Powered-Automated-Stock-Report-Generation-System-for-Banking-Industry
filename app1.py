@@ -255,7 +255,12 @@ df["Target_Price"] = np.where(df["Signal"]==1, df["Close"]*1.05,
 # SIDEBAR FILTERS
 # ============================================
 stocks = df["Ticker"].unique()
-stock = st.sidebar.selectbox("Stock", stocks)
+selected_stocks = st.sidebar.multiselect(
+    "Select Stocks",
+    stocks,
+    default=stocks[:5]  # default first 5
+)
+st.sidebar.caption("You can select multiple stocks for batch analysis")
 
 date_range = st.sidebar.date_input("Date Range", [])
 
@@ -265,10 +270,14 @@ rsi_filter = st.sidebar.selectbox("RSI Filter", ["All","Overbought","Oversold"])
 
 auto_refresh = st.sidebar.checkbox("Auto Refresh")
 
+
 # ============================================
 # FILTER DATA
 # ============================================
-stock_df = df[df["Ticker"]==stock]
+stock_df = df[df["Ticker"].isin(selected_stocks)].copy()
+
+# DEBUG
+st.write("Unique tickers identified in the filtered DataFrame: ", stock_df["Ticker"].nunique())
 
 if len(date_range)==2:
     stock_df = stock_df[
@@ -293,21 +302,34 @@ elif rsi_filter=="Oversold":
 # DISPLAY
 # ============================================
 st.subheader("📄 Data")
-st.dataframe(stock_df.tail(20))
+st.dataframe(stock_df.tail(100))
 
-csv = stock_df.to_csv(index=False)
+download_df = stock_df.copy()
+
+csv = download_df.to_csv(index=False)
+
+st.download_button(
+    "Download Filtered Data",
+    csv,
+    "filtered_stock_data.csv",
+    mime="text/csv"
+)
 st.download_button("Download CSV", csv, "filtered_data.csv")
 
 # Candlestick
-st.subheader("🟥🟩 Chart Candlestick")
-fig = go.Figure(data=[go.Candlestick(
-    x=stock_df["Date"],
-    open=stock_df["Open"],
-    high=stock_df["High"],
-    low=stock_df["Low"],
-    close=stock_df["Close"]
-)])
-st.plotly_chart(fig, use_container_width=True)
+for s in selected_stocks:
+    st.subheader(f"🟥🟩 {s} Chart")
+    temp_df = stock_df[stock_df["Ticker"] == s]
+
+    fig = go.Figure(data=[go.Candlestick(
+        x=temp_df["Date"],
+        open=temp_df["Open"],
+        high=temp_df["High"],
+        low=temp_df["Low"],
+        close=temp_df["Close"]
+    )])
+
+    st.plotly_chart(fig, use_container_width=True)
 
 # Indicators
 st.subheader("📈 Indicators")
