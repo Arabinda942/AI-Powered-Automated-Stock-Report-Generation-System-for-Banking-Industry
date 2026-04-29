@@ -101,13 +101,35 @@ def load_uploaded(file):
 def load_live():
     data = yf.download(NIFTY50, period="2y", group_by="ticker", threads=False)
 
+    # Convert index to datetime
     data.index = pd.to_datetime(data.index)
 
+    # Stack ticker level
     df = data.stack(level=0).reset_index()
-    df.columns = ["Date","Ticker","Open","High","Low","Close","Volume"]
+
+    # Rename safely (DO NOT force blindly)
+    df = df.rename(columns={
+        "level_0": "Date",
+        "level_1": "Ticker"
+    })
+
+    # Remove Adj Close if exists
+    if "Adj Close" in df.columns:
+        df = df.drop(columns=["Adj Close"])
+
+    # Ensure required columns exist
+    required_cols = ["Date","Ticker","Open","High","Low","Close","Volume"]
+
+    missing = [col for col in required_cols if col not in df.columns]
+    if missing:
+        st.error(f"Missing columns: {missing}")
+        st.write(df.columns)
+        st.stop()
+
+    # Keep only required columns (correct order)
+    df = df[required_cols]
 
     return clean_data(df)
-
 # ============================================
 # SELECT DATA
 # ============================================
