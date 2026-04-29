@@ -254,11 +254,12 @@ df["Target_Price"] = np.where(df["Signal"]==1, df["Close"]*1.05,
 # ============================================
 # SIDEBAR FILTERS
 # ============================================
-stocks = df["Ticker"].unique()
+stocks = df["Ticker"].dropna().unique()
+default_stock = [stocks[0]] if len(stocks) > 0 else []
 selected_stocks = st.sidebar.multiselect(
     "Select Stocks",
     stocks,
-    default=stocks[:5]  # default first 5
+    default=default_stock
 )
 st.sidebar.caption("You can select multiple stocks for batch analysis")
 
